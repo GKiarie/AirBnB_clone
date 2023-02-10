@@ -9,6 +9,7 @@ from time import sleep
 import models
 from models.base_model import BaseModel
 
+
 class TestBaseModel(unittest.TestCase):
     """
     Test Class for base Model
@@ -19,7 +20,7 @@ class TestBaseModel(unittest.TestCase):
         """
         my_model = BaseModel()
         self.assertIsInstance(my_model, type(BaseModel()))
-        
+
     def test_instance_uniqueness(self):
         """
         Test that two instances are not equal
@@ -56,7 +57,8 @@ class TestBaseModel(unittest.TestCase):
     def test_models_created_at_different_times(self):
         """
         Test that two models created at different times will have different
-        created_at times with the first created_at time being less that the second
+        created_at times with the first created_at time being
+        less that the second
         """
         my_model1 = BaseModel()
         sleep(0.02)
@@ -66,7 +68,8 @@ class TestBaseModel(unittest.TestCase):
     def test_models_updated_at_different_times(self):
         """
         Test that two models updated at different times will have different
-        updated_at times with the first updated_at time being less that the second
+        updated_at times with the first updated_at time being less
+        that the second
         """
         my_model1 = BaseModel()
         sleep(0.02)
@@ -91,7 +94,8 @@ class TestBaseModel(unittest.TestCase):
 
     def test_to_dict_contents(self):
         """
-        Test that all expected keys are contained in dict created on runninge to_dict()
+        Test that all expected keys are contained in dict
+        created on runninge to_dict()
         """
         my_model = BaseModel()
         my_dict = my_model.to_dict()
@@ -109,7 +113,6 @@ class TestBaseModel(unittest.TestCase):
         my_dict = my_model.to_dict()
         self.assertEqual(my_dict["name"], "new name")
 
-        
 
 if __name__ == "__main__":
     unittest.main()
