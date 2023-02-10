@@ -18,16 +18,24 @@ class BaseModel:
     save(self): update public instance attribute updated_at with current datetime
     to_dict(self): return a dictionary containing all k/v of __dict__ of the instance
     """
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
 
         """
         Class initialization with pblic methods
-        as stated.
+        as stated. Updated init to take in **kwargs in order to be able
+        to recreate an instance with a dictionary representation.
         """
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-
+        if len(kwargs) == 0:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+        else:
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    if key in ["created_at", "updated_at"]:
+                        value = datetime.fromisoformat(value)
+                    setattr(self, key, value)
+                    
     def __str__(self):
         """
         Return string representation as described
