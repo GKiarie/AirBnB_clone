@@ -1,33 +1,23 @@
-#!/usr/bin/python3
-"""Base Model Class Structure
+#!/usr/bin/env python3
+"""A Base class with common methods/attributes
+for other classes
 """
 import uuid
-from datetime import datetime
+from datetime import datetime, time, date
 from models import storage
 
 
 class BaseModel:
+    """a class that defines attributes id,
+    created_at, updated_at and methods
     """
-    Class that defines all common attributes/methods
-    for other classes.
-    Public Attributes:
-    id(string) - assign uuid when an instance is created
-    created_at(datetime) - assign current datetime when instance is created
-    updated_at(datetime) - assign current datetime when an instance is created
-    will be updated every time object is changed.
-    Methods:
-    __str__: to print [<class name>] (<self,id>) <self.__dict__>
-    save(self): update instance attribute updated_at with current datetime
-    to_dict(self): return dict containing all k/v of __dict__ of the instance
-    """
-    def __init__(self, *args, **kwargs):
 
+    def __init__(self, *args, **kwargs):
+        """constructor for class attrs id
+        created_at and updated_at
         """
-        Class initialization with pblic methods
-        as stated. Updated init to take in **kwargs in order to be able
-        to recreate an instance with a dictionary representation.
-        """
-        if len(kwargs) == 0:
+
+        if not kwargs:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
@@ -36,28 +26,31 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key != "__class__":
                     if key in ["created_at", "updated_at"]:
-                        value = datetime.fromisoformat(value)
+                        value = datetime.\
+                                strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                     setattr(self, key, value)
 
     def __str__(self):
+        """returns a string repr of the class
         """
-        Return string representation as described
-        """
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+
+        return (f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}")
 
     def save(self):
+        """updates the updated_at attr
         """
-        Update 'updated_at attribute' with current datetime
-        """
+
         self.updated_at = datetime.now()
         storage.save()
 
     def to_dict(self):
+        """returns a dictionary repr of the instance
         """
-        Return a dict containing all k/v of __dict__ of the instance
-        """
-        att_dict = self.__dict__.copy()
-        att_dict["__class__"] = self.__class__.__name__
-        att_dict["created_at"] = self.created_at.isoformat()
-        att_dict["updated_at"] = self.updated_at.isoformat()
-        return att_dict
+
+        my_dict = self.__dict__.copy()
+        my_dict.update({
+            "__class__": self.__class__.__name__,
+            "updated_at": self.updated_at.isoformat(),
+            "created_at": self.created_at.isoformat()
+            })
+        return my_dict
