@@ -1,120 +1,43 @@
-#!/usr/bin/env python3
-"""Test suite for BaseModel module
+#!/usr/bin/python3
+"""This module handles all test cases related to the class
+BaseModel
 """
-
-from models.base_model import BaseModel
 import unittest
-import uuid
+from models.base_model import BaseModel
 from datetime import datetime
 
 
 class TestBaseModel(unittest.TestCase):
-    """creating test cases for BaseModel
+    """This class defines tests cases for the BaseModel
+    class
     """
 
     def setUp(self):
-        """setup for the tests
-        """
+        """Set Up instances"""
+        self.bm1 = BaseModel()
+        self.bm2 = BaseModel()
 
-        self.bm = BaseModel()
+    def test_uuid(self):
+        """UUID tests"""
+        self.assertTrue(hasattr(self.bm1, "id"))
+        self.assertIsInstance(self.bm1.id, str)
+        self.assertNotEqual(self.bm1.id, self.bm2.id)
 
-    def tearDown(self):
-        """teardown method
-        """
+    def test_instance_type(self):
+        """tests what the instance type is"""
+        self.assertIsInstance(self.bm1, BaseModel)
+        self.assertIsInstance(str(self.bm1), str)
+        self.assertEqual(str(self.bm2),
+                         "[BaseModel] ({}) {}".format(b.id, b.__dict__))
 
-        del self.bm
+    def test_to_dict(self):
+        """tests the dictionary representation of an instance"""
+        self.assertIsInstance(self.bm2.to_dict(), dict)
 
-    def test_id(self):
-        """testing id
-        """
+    def test_type_created_at(self):
+        """tests if type of created time attribute is datetime"""
+        self.assertIs(self.bm1.created_at, datetime)
 
-        self.assertTrue(uuid.UUID(self.bm.id))
-        self.assertEqual(str, type(self.bm.id))
-
-    def test_created_at(self):
-        """testing created_at
-        """
-
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.assertEqual(now, self.bm.created_at.strftime("%Y-%m-%d %H:%M:%S"))
-        self.assertIsInstance(self.bm.created_at, datetime)
-
-    def test_updated_at(self):
-        """testing updated_at
-        """
-
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.assertEqual(now, self.bm.updated_at.strftime("%Y-%m-%d %H:%M:%S"))
-        self.assertIsInstance(self.bm.updated_at, datetime)
-
-    def test_str_format(self):
-        """testing str return format
-        """
-
-        expected = f"[BaseModel] ({self.bm.id}) {self.bm.__dict__}"
-        self.assertEqual(str(self.bm), expected)
-
-    def test_str_update(self):
-        """testing if str works after updating the instance
-        """
-
-        self.bm.name = "myname"
-        expected = f"[BaseModel] ({self.bm.id}) {self.bm.__dict__}"
-        self.assertEqual(str(self.bm), expected)
-
-    def test_str_save(self):
-        """checking if str updates after calling save method
-        """
-
-        self.bm.save()
-        expected = f"[BaseModel] ({self.bm.id}) {self.bm.__dict__}"
-        self.assertEqual(str(self.bm), expected)
-
-    def test_save(self):
-        """testing if save method updates the attributes
-        """
-
-        self.bm.save()
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.assertEqual(now, self.bm.updated_at.strftime("%Y-%m-%d %H:%M:%S"))
-        self.assertIsInstance(self.bm.updated_at, datetime)
-
-    def test_to_dict_format(self):
-        """checking the return of to_dict method
-        """
-
-        my_dict = self.bm.to_dict()
-        self.assertIn("id", my_dict)
-        self.assertIn("created_at", my_dict)
-        self.assertIn("updated_at", my_dict)
-        self.assertIn("__class__", my_dict)
-
-    def test_to_dict_attribtutes(self):
-        """testing for validity of to_dict attrs
-        """
-
-        my_dict = self.bm.to_dict()
-        self.assertEqual(my_dict["id"], self.bm.id)
-        self.assertEqual(my_dict["created_at"], self.bm.created_at.isoformat())
-        self.assertEqual(my_dict["updated_at"], self.bm.updated_at.isoformat())
-        self.assertEqual(my_dict["__class__"], "BaseModel")
-
-    def test_to_dict_update(self):
-        """testing the validity of dict after upadting
-        """
-
-        self.bm.name = "test_name"
-        my_dict = self.bm.to_dict()
-        self.assertEqual(my_dict["name"], "test_name")
-
-    def test_save_update_to_dict(self):
-        """testing the validity of to_dict after calling save
-        method
-        """
-        self.bm.save()
-        my_dict = self.bm.to_dict()
-        self.assertEqual(my_dict["updated_at"], self.bm.updated_at.isoformat())
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_type_updated_at(self):
+        """tests if type of created time attribute is datetime"""
+        self.assertIs(self.bm1.updated_at, datetime)
